@@ -9,9 +9,24 @@
     <script src="app.js" defer></script>
 </head>
 <body>
+    <h1>Odin Tic Tac Toe</h1>
     <div class="content">
+        <form class="player1">
+            <label for="name">Name: </label>
+            <input type="text" name="name1" id="name1">
+            <button data-symbol="X">Player 1 Ready</button>
+            <p></p>
+        </form>
+        <form class="player2">
+            <label for="name">Name: </label>
+            <input type="text" name="name2" id="name2">
+            <button data-symbol="O">Player 2 Ready</button>
+            <p></p>
+        </form>
+        <button class="start">Start Game</button>
+        <p class="announcement"></p>
         <div class="gameBoard">
-            
+
         </div>
     </div>
 </body>
