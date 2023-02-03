@@ -102,23 +102,31 @@ const gameController = (() => {
     let gameOver = false;
 
     function createPlayer(e) {
-        e.preventDefault();
-        let playerName;
-        if(e.target.getAttribute('data-symbol') === "X") {
-            playerName = $playerOneName.value;
-            $playerOneButton.disabled = true;
-            $playerOneText.textContent = `${playerName} is ready!`
-            $startButton.style.display = "block";
-            var player = playerFactory(playerName, e.target.getAttribute('data-symbol'));
-            players[0] = player;
+        if(e.target.getAttribute('data-symbol') === "X"){
+            if(!$playerOneForm.checkValidity()){
+                $playerOneForm.reportValidity();
+            } else {
+                e.preventDefault();
+                let playerName;
+                playerName = $playerOneName.value;
+                $playerOneButton.disabled = true;
+                $playerOneText.textContent = `${playerName} is ready!`
+                $startButton.style.display = "block";
+                var player = playerFactory(playerName, e.target.getAttribute('data-symbol'));
+                players[0] = player;
+            }
         } else {
-            playerName = $playerTwoName.value;
-            $playerTwoButton.disabled = true;
-            $playerTwoText.textContent = `${playerName} is ready!`
-            $startButton.style.display = "block";
-            var player = playerFactory(playerName, e.target.getAttribute('data-symbol'));
-            players[1] = player;
-        };
+            if(!$playerTwoForm.checkValidity()){
+                $playerTwoForm.reportValidity();
+            } else {
+                playerName = $playerTwoName.value;
+                $playerTwoButton.disabled = true;
+                $playerTwoText.textContent = `${playerName} is ready!`
+                $startButton.style.display = "block";
+                var player = playerFactory(playerName, e.target.getAttribute('data-symbol'));
+                players[1] = player;
+            }
+        }
     }
 
     function startGame() {
