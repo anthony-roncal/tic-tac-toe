@@ -54,18 +54,24 @@ const displayController = (() => {
 
     function updateAnnouncement() {
         let gameOver = gameController.isGameOver();
-        if (!gameOver) {
-            if (gameController.getRound()%2 ===0){
-                $message.textContent = `It's ${gameController.getPlayers()[0].name}'s turn`;
+        let roundNumber = gameController.getRound();
+        if(roundNumber < 9) {
+            if(!gameOver) {
+                if (gameController.getRound()%2 ===0){
+                    $message.textContent = `It's ${gameController.getPlayers()[0].name}'s turn`;
+                } else {
+                    $message.textContent = `It's ${gameController.getPlayers()[1].name}'s turn`;
+                }
             } else {
-                $message.textContent = `It's ${gameController.getPlayers()[1].name}'s turn`;
+                if (gameController.getRound()%2 ===0){
+                    $message.textContent = `${gameController.getPlayers()[1].name} WON!`;
+                } else {
+                    $message.textContent = `${gameController.getPlayers()[0].name} WON!`;
+                }
             }
         } else {
-            if (gameController.getRound()%2 ===0){
-                $message.textContent = `${gameController.getPlayers()[1].name} WON!`;
-            } else {
-                $message.textContent = `${gameController.getPlayers()[0].name} WON!`;
-            }
+            $message.textContent = `TIE!`;
+            gameController.$startButton.style.display = "block";
         }
     }
 
@@ -168,5 +174,5 @@ const gameController = (() => {
         return gameOver;
     }
 
-    return {getRound, setRound, getPlayers, checkForWins, resetGame, isGameOver};
+    return {getRound, setRound, getPlayers, checkForWins, resetGame, isGameOver, $startButton};
 })();
