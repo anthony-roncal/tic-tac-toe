@@ -12,7 +12,8 @@ const gameBoard = (() => {
         let space = Array.from(e.target.parentNode.children).indexOf(e.target);
         let round = gameController.getRound();
         let players = gameController.getPlayers();
-        if (gameBoardArray[space] === ""){
+        let gameOver = gameController.isGameOver();
+        if (gameBoardArray[space] === "" && !gameOver){
             if(round%2 === 0) {
                 gameBoardArray[space] = players[0].symbol;
                 $gameBoard.children[space].textContent = players[0].symbol;
@@ -20,7 +21,9 @@ const gameBoard = (() => {
                 gameBoardArray[space] = players[1].symbol;
                 $gameBoard.children[space].textContent = players[1].symbol;
             }
+            gameController.checkForWins();
             gameController.setRound(round+1);
+            displayController.updateAnnouncement();
         }
     }
 
@@ -35,6 +38,8 @@ const gameBoard = (() => {
 })();
 
 const displayController = (() => {
+    $message = document.querySelector('.announcement');
+
     function render(gameBoardArray) {
         Array.from($gameBoard.children).forEach(space => {
             $gameBoard.removeChild(space);
@@ -47,15 +52,28 @@ const displayController = (() => {
         });
     }
 
-    return {render};
+    function updateAnnouncement() {
+        let gameOver = gameController.isGameOver();
+        if (!gameOver) {
+            if (gameController.getRound()%2 ===0){
+                $message.textContent = `It's ${gameController.getPlayers()[0].name}'s turn`;
+            } else {
+                $message.textContent = `It's ${gameController.getPlayers()[1].name}'s turn`;
+            }
+        } else {
+            if (gameController.getRound()%2 ===0){
+                $message.textContent = `${gameController.getPlayers()[1].name} WON!`;
+            } else {
+                $message.textContent = `${gameController.getPlayers()[0].name} WON!`;
+            }
+        }
+    }
+
+    return {render, updateAnnouncement};
 })();
 
 const playerFactory = (name, symbol) => {
-    function chooseSpace() {
-        
-    }
-
-    return {name, symbol, chooseSpace};
+    return {name, symbol};
 };
 
 const gameController = (() => {
@@ -75,6 +93,7 @@ const gameController = (() => {
 
     let round = 0;
     let players = [];
+    let gameOver = false;
 
     function createPlayer(e) {
         e.preventDefault();
@@ -97,6 +116,7 @@ const gameController = (() => {
     }
 
     function startGame() {
+        gameBoard.resetBoard();
         $startButton.style.display = "none";
         $playerOneForm.style.display = "none";
         $playerTwoForm.style.display = "none";
@@ -105,6 +125,26 @@ const gameController = (() => {
             space.addEventListener('click', gameBoard.setSpace);
         });
         round = 0;
+        gameOver = false;
+        displayController.updateAnnouncement();
+    }
+    
+    function compareSpaces(a, b, c) {
+        let currentGameBoard = gameBoard.getGameBoard();
+        if(currentGameBoard[a] !== '' && currentGameBoard[a] === currentGameBoard[b] && currentGameBoard[b] === currentGameBoard[c]) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function checkForWins() {
+        if(compareSpaces(0, 1, 2) || compareSpaces(3, 4, 5) || compareSpaces(6, 7, 8) || 
+            compareSpaces(0, 3, 6) || compareSpaces(1, 4, 7) || compareSpaces(2, 5, 8) ||
+            compareSpaces(0, 4, 8) || compareSpaces(2, 4, 6)) {
+            gameOver = true;
+            $startButton.style.display = "block";
+        }
     }
 
     function resetGame() {
@@ -124,5 +164,9 @@ const gameController = (() => {
         return players;
     }
 
-    return {getRound, setRound, getPlayers, resetGame};
+    function isGameOver() {
+        return gameOver;
+    }
+
+    return {getRound, setRound, getPlayers, checkForWins, resetGame, isGameOver};
 })();
