@@ -71,7 +71,7 @@ const displayController = (() => {
             }
         } else {
             $message.textContent = `TIE!`;
-            gameController.$startButton.style.display = "block";
+            gameController.displayStartButton();
         }
     }
 
@@ -111,7 +111,7 @@ const gameController = (() => {
                 playerName = $playerOneName.value;
                 $playerOneButton.disabled = true;
                 $playerOneText.textContent = `${playerName} is ready!`
-                $startButton.style.display = "block";
+                displayStartButton();
                 var player = playerFactory(playerName, e.target.getAttribute('data-symbol'));
                 players[0] = player;
             }
@@ -122,7 +122,7 @@ const gameController = (() => {
                 playerName = $playerTwoName.value;
                 $playerTwoButton.disabled = true;
                 $playerTwoText.textContent = `${playerName} is ready!`
-                $startButton.style.display = "block";
+                displayStartButton();
                 var player = playerFactory(playerName, e.target.getAttribute('data-symbol'));
                 players[1] = player;
             }
@@ -157,7 +157,7 @@ const gameController = (() => {
             compareSpaces(0, 3, 6) || compareSpaces(1, 4, 7) || compareSpaces(2, 5, 8) ||
             compareSpaces(0, 4, 8) || compareSpaces(2, 4, 6)) {
             gameOver = true;
-            $startButton.style.display = "block";
+            displayStartButton();
         }
     }
 
@@ -182,5 +182,9 @@ const gameController = (() => {
         return gameOver;
     }
 
-    return {getRound, setRound, getPlayers, checkForWins, resetGame, isGameOver, $startButton};
+    function displayStartButton() {
+        $startButton.style.display = "block";
+    }
+
+    return {getRound, setRound, getPlayers, checkForWins, resetGame, isGameOver, displayStartButton};
 })();
