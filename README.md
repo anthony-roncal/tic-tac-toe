@@ -1,3 +1,3 @@
-# odin-tic-tac-toe
+# tic-tac-toe
 
-This is a practice project for The Odin Project: Tic Tac Toe.
+View app at: https://anthony-roncal.github.io/tic-tac-toe/
